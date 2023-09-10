@@ -1,11 +1,13 @@
-import { Injectable } from '@nestjs/common';
+import {
+  Injectable,
+  NotFoundException
+} from '@nestjs/common';
 import { CardCoreService } from 'src/core/service/card-core/card-core.service';
 import { CreateCardDto } from './dto/create-card.dto';
 
 @Injectable()
 export class CardsService {
   constructor(private readonly cardCoreService: CardCoreService) {}
-  private cards: string[];
 
   async findAll(): Promise<CreateCardDto[]> {
     const response = await this.cardCoreService.findAll();
@@ -28,16 +30,24 @@ export class CardsService {
 
   async update(dto: CreateCardDto): Promise<CreateCardDto> {
     const saved = await this.cardCoreService.findOne(dto.id);
-    const entity = {
-      ...saved,
-      ...CreateCardDto.toEntity(dto),
-    };
+
+    if (!saved) {
+      throw new NotFoundException(`Recurso com o ID ${dto.id} não encontrado.`);
+    }
+
+    const entity = { ...saved, ...CreateCardDto.toEntity(dto) };
     const updated = await this.cardCoreService.save(entity);
 
     return CreateCardDto.fromEntity(updated);
   }
 
   async delete(id: number): Promise<void> {
+    const saved = await this.cardCoreService.findOne(id);
+
+    if (!saved) {
+      throw new NotFoundException(`Recurso com o ID ${id} não encontrado.`);
+    }
+
     await this.cardCoreService.remove(id);
   }
 }

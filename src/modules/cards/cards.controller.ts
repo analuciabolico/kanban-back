@@ -3,17 +3,22 @@ import {
   Controller,
   Delete,
   Get,
+  HttpStatus,
   Param,
+  ParseIntPipe,
   Post,
   Put,
+  Res,
 } from '@nestjs/common';
 import {
+  ApiBadRequestResponse,
   ApiCreatedResponse,
   ApiNoContentResponse,
   ApiOkResponse,
   ApiResponse,
   ApiTags,
 } from '@nestjs/swagger';
+import { Response } from 'express';
 import { CardsService } from './cards.service';
 import { CreateCardDto } from './dto/create-card.dto';
 
@@ -28,30 +33,43 @@ export class CardsController {
   @Get()
   @ApiOkResponse({ description: 'Exemplo OK' })
   async findAll(): Promise<CreateCardDto[]> {
-    return this.cardsService.findAll();
+    return await this.cardsService.findAll();
   }
 
   @Post()
   @ApiCreatedResponse({ description: 'Exemplo Created' })
   async save(@Body() body: CreateCardDto): Promise<CreateCardDto> {
-    return this.cardsService.save(body);
+    return await this.cardsService.save(body);
   }
 
   @Get(':id')
   @ApiOkResponse({ description: 'Exemplo OK' })
-  async findById(@Param('id') id: number): Promise<CreateCardDto> {
+  async findById(
+    @Param('id', ParseIntPipe) id: number,
+  ): Promise<CreateCardDto> {
     return this.cardsService.findById(id);
-  }
-
-  @Put(':id')
-  @ApiCreatedResponse({ description: 'Exemplo Created' })
-  async update(@Body() body: CreateCardDto): Promise<CreateCardDto> {
-    return this.cardsService.update(body);
   }
 
   @Delete(':id')
   @ApiNoContentResponse({ description: 'Exemplo No Content' })
-  async remove(@Param('id') id: number): Promise<void> {
-    this.cardsService.delete(id);
+  async remove(@Param('id', ParseIntPipe) id: number): Promise<void> {
+    await this.cardsService.delete(id);
+  }
+
+  @Put(':id')
+  @ApiCreatedResponse({ description: 'Exemplo Created' })
+  @ApiBadRequestResponse({ description: 'Exemplo Bad Request' })
+  async update(
+    @Res() response: Response,
+    @Param('id', ParseIntPipe) id: number,
+    @Body() body: CreateCardDto,
+  ) {
+    if (id === body.id) {
+      const card = await this.cardsService.update(body);
+
+      response.status(HttpStatus.OK).send(card);
+    } else {
+      response.status(HttpStatus.BAD_REQUEST).send();
+    }
   }
 }
