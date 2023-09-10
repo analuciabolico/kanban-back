@@ -20,6 +20,7 @@ import {
 } from '@nestjs/swagger';
 import { Response } from 'express';
 import { CardsService } from './cards.service';
+import { CardDto } from './dto/card.dto';
 import { CreateCardDto } from './dto/create-card.dto';
 
 @ApiTags('cards')
@@ -32,28 +33,27 @@ export class CardsController {
 
   @Get()
   @ApiOkResponse({ description: 'Exemplo OK' })
-  async findAll(): Promise<CreateCardDto[]> {
+  async findAll(): Promise<CardDto[]> {
     return await this.cardsService.findAll();
   }
 
   @Post()
   @ApiCreatedResponse({ description: 'Exemplo Created' })
-  async save(@Body() body: CreateCardDto): Promise<CreateCardDto> {
+  async save(@Body() body: CreateCardDto): Promise<CardDto> {
     return await this.cardsService.save(body);
   }
 
   @Get(':id')
   @ApiOkResponse({ description: 'Exemplo OK' })
-  async findById(
-    @Param('id', ParseIntPipe) id: number,
-  ): Promise<CreateCardDto> {
+  async findById(@Param('id', ParseIntPipe) id: number): Promise<CardDto> {
     return this.cardsService.findById(id);
   }
 
   @Delete(':id')
   @ApiNoContentResponse({ description: 'Exemplo No Content' })
-  async remove(@Param('id', ParseIntPipe) id: number): Promise<void> {
+  async remove(@Param('id', ParseIntPipe) id: number): Promise<CardDto[]> {
     await this.cardsService.delete(id);
+    return await this.cardsService.findAll();
   }
 
   @Put(':id')
@@ -62,7 +62,7 @@ export class CardsController {
   async update(
     @Res() response: Response,
     @Param('id', ParseIntPipe) id: number,
-    @Body() body: CreateCardDto,
+    @Body() body: CardDto,
   ) {
     if (id === body.id) {
       const card = await this.cardsService.update(body);
