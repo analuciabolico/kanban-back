@@ -1,23 +1,24 @@
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { TypeOrmModuleOptions, TypeOrmOptionsFactory } from '@nestjs/typeorm';
-import { Card } from 'src/core/domain/entities/card.entity';
+import { APPLICATION } from 'src/constants';
+import { MysqlService } from '../mysql/mysql.service';
+import { SqliteService } from '../sqlite/sqlite.service';
 
 @Injectable()
 export class TypeOrmConfigService implements TypeOrmOptionsFactory {
   constructor(private configService: ConfigService) {}
   createTypeOrmOptions(): TypeOrmModuleOptions | Promise<TypeOrmModuleOptions> {
-    return {
-      type: 'mysql',
-      host: 'localhost',
-      port: 3306,
-      username: 'root',
-      password: 'root',
-      database: 'kanban',
-      logging: true,
-      entities: [Card],
-      autoLoadEntities: true,
-      synchronize: true,
-    };
+    const type = APPLICATION.DB.TYPE;
+
+    switch (type) {
+      case 'sqlite':
+        return SqliteService.config();
+      case 'mysql':
+        return MysqlService.config();
+
+      default:
+        return SqliteService.config();
+    }
   }
 }
