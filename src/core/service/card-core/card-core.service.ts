@@ -14,7 +14,7 @@ export class CardCoreService {
     return this.cardRepository.find();
   }
 
-  async findOne(id: number): Promise<Card> {
+  async findOne(id: number): Promise<Card | null> {
     return this.cardRepository.findOneBy({ id: id });
   }
 
