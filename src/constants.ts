@@ -4,10 +4,25 @@ export const APPLICATION = {
   TITLE: process.env.APP_TITLE || 'quadro-kanban-api',
   PREFIX: process.env.APP_PREFIX || 'api',
   SWAGGER: {
-    TITLE: process.env.APP_SWAGGER_TITLE || 'API Quadro de Kanban',
+    TITLE: process.env.APP_SWAGGER_TITLE || 'API Quadro Kanban',
     DESCRIPTION:
       process.env.APP_SWAGGER_DESCRIPTION || 'API de Quadro Kanban descrição.',
     VERSION: process.env.NODE_TITLE || 'v0.0.1',
+  },
+  DB: {
+    TYPE: process.env.APP_DB_HOST || 'sqlite',
+    HOST: process.env.APP_DB_HOST || 'localhost',
+    PORT: process.env.APP_DB_PORT || 3306,
+    USERNAME: process.env.APP_DB_USERNAME || 'root',
+    PASSWORD: process.env.APP_DB_PASSWORD || 'root',
+    DATABASE: process.env.APP_DB_DATABASE || 'kanban',
+  },
+  LOG: {
+    LEVEL: 'info',
+    CATEGORY: 'APPLICATION',
+    METAS: {
+      SERVICE: 'API_KANBAN',
+    },
   },
 };
 
