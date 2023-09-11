@@ -1,14 +1,27 @@
 import { ApiProperty } from '@nestjs/swagger';
+import { IsInt, IsNotEmpty, IsString } from 'class-validator';
 import { Card } from 'src/core/domain/entities/card.entity';
+import { ZodObject, z } from 'zod';
 
 export class CardDto {
   @ApiProperty()
+  @IsInt()
+  @IsNotEmpty()
   readonly id: number;
+
   @ApiProperty()
+  @IsString()
+  @IsNotEmpty()
   readonly titulo: string;
+
   @ApiProperty()
+  @IsString()
+  @IsNotEmpty()
   readonly conteudo: string;
+
   @ApiProperty()
+  @IsString()
+  @IsNotEmpty()
   readonly lista: string;
 
   constructor(partial: Partial<CardDto>) {
@@ -31,5 +44,17 @@ export class CardDto {
       conteudo: entity.content,
       lista: entity.list,
     });
+  }
+
+  static schemaValidation(): ZodObject<any> {
+    return z
+      .object({
+        id: z.number(),
+        titulo: z.string(),
+        conteudo: z.string(),
+        lista: z.string(),
+      })
+      .required()
+      .strict();
   }
 }

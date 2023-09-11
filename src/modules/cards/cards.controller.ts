@@ -1,14 +1,14 @@
 import {
+  BadRequestException,
   Body,
   Controller,
   Delete,
   Get,
-  HttpStatus,
   Param,
   ParseIntPipe,
   Post,
   Put,
-  Res,
+  UsePipes,
 } from '@nestjs/common';
 import {
   ApiBadRequestResponse,
@@ -18,7 +18,7 @@ import {
   ApiResponse,
   ApiTags,
 } from '@nestjs/swagger';
-import { Response } from 'express';
+import { ZodValidationPipe } from 'src/shared/pipes/zod-validation/zod-validation.pipe';
 import { CardsService } from './cards.service';
 import { CardDto } from './dto/card.dto';
 import { CreateCardDto } from './dto/create-card.dto';
@@ -39,6 +39,7 @@ export class CardsController {
 
   @Post()
   @ApiCreatedResponse({ description: 'Exemplo Created' })
+  @UsePipes(new ZodValidationPipe(CreateCardDto.schemaValidation()))
   async save(@Body() body: CreateCardDto): Promise<CardDto> {
     return await this.cardsService.save(body);
   }
@@ -57,19 +58,19 @@ export class CardsController {
   }
 
   @Put(':id')
-  @ApiCreatedResponse({ description: 'Exemplo Created' })
+  @ApiOkResponse({ description: 'Exemplo Updated' })
   @ApiBadRequestResponse({ description: 'Exemplo Bad Request' })
+  @UsePipes(new ZodValidationPipe(CardDto.schemaValidation()))
   async update(
-    @Res() response: Response,
     @Param('id', ParseIntPipe) id: number,
     @Body() body: CardDto,
-  ) {
-    if (id === body.id) {
-      const card = await this.cardsService.update(body);
-
-      response.status(HttpStatus.OK).send(card);
+  ): Promise<CardDto> {
+    if (id != body.id) {
+      throw new BadRequestException(
+        'IDs do parametro e do corpo da requisicao sao diferentes',
+      );
     } else {
-      response.status(HttpStatus.BAD_REQUEST).send();
+      return await this.cardsService.update(body);
     }
   }
 }
