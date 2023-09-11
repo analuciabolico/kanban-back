@@ -12,10 +12,12 @@ import { LoggerWinstonSystemService } from 'src/config/loggings/logger-winston-s
 export class AllExceptionsFilter implements ExceptionFilter {
   constructor(private readonly httpAdapterHost: HttpAdapterHost) {}
 
-  catch(exception: unknown, host: ArgumentsHost): void {
+  catch(exception: any, host: ArgumentsHost): void {
     const { httpAdapter } = this.httpAdapterHost;
     const ctx = host.switchToHttp();
-    const message = (exception as any)?.message || 'Internal Server Error';
+    const path = httpAdapter.getRequestUrl(ctx.getRequest());
+    const message = exception?.message || 'Internal Server Error';
+    const error = exception?.error || 'Internal Server Error';
 
     const httpStatus =
       exception instanceof HttpException
@@ -24,8 +26,8 @@ export class AllExceptionsFilter implements ExceptionFilter {
 
     const responseBody = {
       statusCode: httpStatus,
-      timestamp: new Date().toISOString(),
-      path: httpAdapter.getRequestUrl(ctx.getRequest()),
+      path: path,
+      error: error,
       message: message,
     };
 

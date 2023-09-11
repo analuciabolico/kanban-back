@@ -14,15 +14,18 @@ export class HttpExceptionFilter implements ExceptionFilter {
     const response = ctx.getResponse<Response>();
     const request = ctx.getRequest<Request>();
     const status = exception.getStatus();
-    const message = exception.message;
+    const message = exception.message || 'N/A';
+    const error = exception.name || 'N/A';
+    const path = request?.route?.path || 'N/A';
 
+    // Toggle comment for enable show Stack trace from exceptions on console.
     // LoggerWinstonSystemService.getLoger().error(exception.stack);
     LoggerWinstonSystemService.getLoger().error(message);
 
     response.status(status).json({
       statusCode: status,
-      timestamp: new Date().toISOString(),
-      path: request.route['path'],
+      path: path,
+      error: error,
       message: message,
     });
   }
