@@ -1,16 +1,14 @@
 import { Injectable, NestMiddleware } from '@nestjs/common';
-import { LOGGER } from '../logger';
+import { NextFunction, Request, Response } from 'express';
+import { LoggerWinstonSystemService } from 'src/config/loggings/logger-winston-system/logger-winston-system.service';
 
 @Injectable()
 export class LoggingMiddleware implements NestMiddleware {
-  use(req: any, res: any, next: () => void) {
-    const split = ' - ';
-    const prefix = '[Request]';
-    const statusCode = res.statusCode;
-    const path = req.originalUrl;
-    const message = prefix + split + statusCode + split + path;
+  use(req: Request, res: Response, next: NextFunction) {
+    const message = `[New Request from ROUTE: ${req.path}]`;
 
-    LOGGER.info(message);
+    LoggerWinstonSystemService.getLoger().info(message);
+
     next();
   }
 }
