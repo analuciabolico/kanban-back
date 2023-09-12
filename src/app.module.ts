@@ -6,13 +6,17 @@ import {
 } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 
+import { JwtModule } from '@nestjs/jwt';
 import { DatabasesModule } from './config/databases/databases.module';
 import { TypeOrmConfigService } from './config/databases/type-orm-config/type-orm-config.service';
 import { LoggingsModule } from './config/loggings/loggings.module';
-import { AuthCoreModule } from './core/service/auth-core/auth-core.module';
+import { JwtConfigService } from './config/security/jwt-config/jwt-config.service';
+import { SecurityModule } from './config/security/security.module';
 import { CardCoreModule } from './core/service/card-core/card-core.module';
+import { UserCoreModule } from './core/service/user-core/user-core.module';
 import { AuthModule } from './modules/auth/auth.module';
 import { CardsModule } from './modules/cards/cards.module';
+import { AuthModule as AuthGuardModule } from './shared/guards/auth/auth.module';
 import { LoggingMutationMiddleware } from './shared/middlewares/logging-mutation/logging-mutation.middleware';
 import { LoggingMiddleware } from './shared/middlewares/logging/logging.middleware';
 
@@ -24,12 +28,20 @@ import { LoggingMiddleware } from './shared/middlewares/logging/logging.middlewa
       imports: [ConfigModule],
       inject: [ConfigService],
     }),
+    JwtModule.registerAsync({
+      global: true,
+      useClass: JwtConfigService,
+      imports: [ConfigModule],
+      inject: [ConfigService],
+    }),
+    AuthGuardModule,
     LoggingsModule,
     DatabasesModule,
     AuthModule,
     CardsModule,
-    AuthCoreModule,
     CardCoreModule,
+    UserCoreModule,
+    SecurityModule,
   ],
 })
 export class AppModule implements NestModule {

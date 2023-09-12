@@ -3,11 +3,19 @@ export const APPLICATION = {
   PORT: process.env.NODE_PORT || 5000,
   TITLE: process.env.APP_TITLE || 'quadro-kanban-api',
   PREFIX: process.env.APP_PREFIX || 'api',
+  JWT: {
+    SECRET_KEY: process.env.APP_JWT_SECRET_KEY || 'nothing',
+    EXPIRES: process.env.APP_JWT_EXPIRES || '60s',
+  },
   SWAGGER: {
     TITLE: process.env.APP_SWAGGER_TITLE || 'API Quadro Kanban',
     DESCRIPTION:
       process.env.APP_SWAGGER_DESCRIPTION || 'API de Quadro Kanban descrição.',
     VERSION: process.env.NODE_TITLE || 'v0.0.1',
+  },
+  USER: {
+    NAME: process.env.APP_USERNAME || 'username',
+    PASSWORD: process.env.APP_PASSWORD || 'password',
   },
   DB: {
     TYPE: process.env.APP_DB_HOST || 'sqlite',
