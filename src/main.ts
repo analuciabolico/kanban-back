@@ -1,4 +1,9 @@
-import { ExceptionFilter, ValidationPipe } from '@nestjs/common';
+import {
+  ExceptionFilter,
+  VERSION_NEUTRAL,
+  ValidationPipe,
+  VersioningType,
+} from '@nestjs/common';
 import {
   AbstractHttpAdapter,
   HttpAdapterHost,
@@ -16,12 +21,18 @@ DotENV.config();
 
 type ExceptionFilterDefault = ExceptionFilter<any>[];
 type HttpAdapterDefault = HttpAdapterHost<AbstractHttpAdapter<any, any, any>>;
+const BASE_PATH = '/api';
+const DOCS = BASE_PATH + '/docs';
 
 function swagger() {
   return new DocumentBuilder()
     .setTitle(APPLICATION.SWAGGER.TITLE)
     .setDescription(APPLICATION.SWAGGER.DESCRIPTION)
     .setVersion(APPLICATION.SWAGGER.VERSION)
+    .addBearerAuth({
+      type: 'http',
+      name: 'Bearer Auth',
+    })
     .build();
 }
 
@@ -39,11 +50,15 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   const httpAdapterHost = app.get(HttpAdapterHost);
   const config = swagger();
-  const document = SwaggerModule.createDocument(app, config);
   const filters = createFilters(httpAdapterHost);
 
   app.useGlobalFilters(...filters);
-  app.setGlobalPrefix('/api');
+  app.setGlobalPrefix(BASE_PATH);
+  app.enableVersioning({
+    type: VersioningType.HEADER,
+    header: 'X-API-Version',
+    defaultVersion: VERSION_NEUTRAL,
+  });
   app.useGlobalPipes(
     new ValidationPipe({
       forbidUnknownValues: true,
@@ -52,7 +67,8 @@ async function bootstrap() {
       skipUndefinedProperties: false,
     }),
   );
-  SwaggerModule.setup('/api/docs', app, document);
+  const document = SwaggerModule.createDocument(app, config);
+  SwaggerModule.setup(DOCS, app, document);
 
   await app.listen(APPLICATION.PORT);
 }

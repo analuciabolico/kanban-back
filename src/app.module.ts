@@ -16,6 +16,7 @@ import { CardCoreModule } from './core/service/card-core/card-core.module';
 import { UserCoreModule } from './core/service/user-core/user-core.module';
 import { AuthModule } from './modules/auth/auth.module';
 import { CardsModule } from './modules/cards/cards.module';
+import { HealthModule } from './modules/health/health.module';
 import { AuthModule as AuthGuardModule } from './shared/guards/auth/auth.module';
 import { LoggingMutationMiddleware } from './shared/middlewares/logging-mutation/logging-mutation.middleware';
 import { LoggingMiddleware } from './shared/middlewares/logging/logging.middleware';
@@ -42,6 +43,7 @@ import { LoggingMiddleware } from './shared/middlewares/logging/logging.middlewa
     CardCoreModule,
     UserCoreModule,
     SecurityModule,
+    HealthModule,
   ],
 })
 export class AppModule implements NestModule {

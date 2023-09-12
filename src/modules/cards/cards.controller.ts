@@ -9,10 +9,13 @@ import {
   Post,
   Put,
   UsePipes,
+  VERSION_NEUTRAL,
 } from '@nestjs/common';
 import {
   ApiBadRequestResponse,
+  ApiBearerAuth,
   ApiCreatedResponse,
+  ApiHeader,
   ApiNoContentResponse,
   ApiOkResponse,
   ApiResponse,
@@ -24,15 +27,26 @@ import { CardDto } from './dto/card.dto';
 import { CreateCardDto } from './dto/create-card.dto';
 
 @ApiTags('cards')
+@ApiBearerAuth()
+@ApiHeader({
+  name: 'X-API-Version',
+  description: 'Version header',
+  allowEmptyValue: true,
+  example: '1',
+})
+@ApiResponse({ status: 401, description: 'Unauthorized.' })
 @ApiResponse({ status: 403, description: 'Forbidden.' })
 @ApiResponse({ status: 404, description: 'Not Found.' })
 @ApiResponse({ status: 500, description: 'Internal Server Error.' })
-@Controller('cards')
+@Controller({
+  path: 'cards',
+  version: VERSION_NEUTRAL,
+})
 export class CardsController {
   constructor(private cardsService: CardsService) {}
 
   @Get()
-  @ApiOkResponse({ description: 'Exemplo OK' })
+  @ApiOkResponse({ description: 'Exemplo OK', type: [CardDto] })
   async findAll(): Promise<CardDto[]> {
     return await this.cardsService.findAll();
   }

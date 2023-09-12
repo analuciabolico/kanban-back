@@ -58,6 +58,33 @@ $ yarn run test:e2e
 $ yarn run test:cov
 ```
 
+## Environment
+
+Example `.env` file bellow:
+
+```bash
+NODE_ENV="development"
+NODE_PORT=5000
+
+APP_TITLE="quadro-kanban-api"
+
+APP_USERNAME="letscode"
+APP_PASSWORD="lets@123"
+
+APP_JWT_SECRET_KEY="HeloWorld"
+APP_JWT_EXPIRES="5m"
+
+APP_DB_HOST="localhost"
+APP_DB_PORT=3306
+APP_DB_USERNAME="root"
+APP_DB_PASSWORD="root"
+APP_DB_DATABASE="kanban"
+
+APP_SWAGGER_TITLE="API Quadro Kanban"
+APP_SWAGGER_DESCRIPTION="API de Quadro Kanban para organização e acompanhamento de tarefas. Este recurso permite que você crie quadros personalizados, adicione colunas e gerencie tarefas em cada coluna."
+APP_SWAGGER_VERSION="v0.0.1"
+```
+
 ## Support
 
 Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).

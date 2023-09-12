@@ -3,12 +3,18 @@ import { IsNotEmpty, IsString } from 'class-validator';
 import { ZodObject, z } from 'zod';
 
 export class UserDto {
-  @ApiProperty()
+  @ApiProperty({
+    description: 'The username',
+    default: 'admin',
+  })
   @IsString()
   @IsNotEmpty()
   readonly username: string;
 
-  @ApiProperty()
+  @ApiProperty({
+    description: 'The password',
+    default: '*****',
+  })
   @IsString()
   @IsNotEmpty()
   readonly password: string;
