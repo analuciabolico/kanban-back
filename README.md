@@ -29,34 +29,48 @@
 ## Installation
 
 ```bash
-$ yarn install
+$ npm install
 ```
 
 ## Running the app
 
 ```bash
 # development
-$ yarn run start
+$ npm run start
 
 # watch mode
-$ yarn run start:dev
+$ npm run start:dev
 
 # production mode
-$ yarn run start:prod
+$ npm run start:prod
 ```
 
 ## Test
 
 ```bash
 # unit tests
-$ yarn run test
+$ npm run test
 
 # e2e tests
-$ yarn run test:e2e
+$ npm run test:e2e
 
 # test coverage
-$ yarn run test:cov
+$ npm run test:cov
 ```
+
+## Documentation
+
+Click the link to see the API documentation [Swagger OpenAPI](http://localhost:5000/api/docs) also for the other documentation more specific and robustic follow this step-by-step bellow:
+
+```bash
+# unit tests
+$ npm run doc:generate
+
+# e2e tests
+$ npm run doc
+```
+
+And visit this link [Documentation](http://localhost:8080)
 
 ## Environment
 
