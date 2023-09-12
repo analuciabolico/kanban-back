@@ -4,15 +4,24 @@ import { Card } from 'src/core/domain/entities/card.entity';
 import { ZodObject, z } from 'zod';
 
 export class CreateCardDto {
-  @ApiProperty()
+  @ApiProperty({
+    description: 'The titulo property',
+    default: 'Example title',
+  })
   @IsString()
   readonly titulo: string;
 
-  @ApiProperty()
+  @ApiProperty({
+    description: 'The conteudo property',
+    default: 'Example conteudo',
+  })
   @IsString()
   readonly conteudo: string;
 
-  @ApiProperty()
+  @ApiProperty({
+    description: 'The lista property',
+    default: 'Example lista',
+  })
   @IsString()
   readonly lista: string;
 

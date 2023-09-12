@@ -4,22 +4,34 @@ import { Card } from 'src/core/domain/entities/card.entity';
 import { ZodObject, z } from 'zod';
 
 export class CardDto {
-  @ApiProperty()
+  @ApiProperty({
+    description: 'The id property',
+    default: '1',
+  })
   @IsInt()
   @IsNotEmpty()
   readonly id: number;
 
-  @ApiProperty()
+  @ApiProperty({
+    description: 'The titulo property',
+    default: 'Example title',
+  })
   @IsString()
   @IsNotEmpty()
   readonly titulo: string;
 
-  @ApiProperty()
+  @ApiProperty({
+    description: 'The conteudo property',
+    default: 'Example conteudo',
+  })
   @IsString()
   @IsNotEmpty()
   readonly conteudo: string;
 
-  @ApiProperty()
+  @ApiProperty({
+    description: 'The lista property',
+    default: 'Example lista',
+  })
   @IsString()
   @IsNotEmpty()
   readonly lista: string;

@@ -16,7 +16,6 @@ import {
   ApiBearerAuth,
   ApiCreatedResponse,
   ApiHeader,
-  ApiNoContentResponse,
   ApiOkResponse,
   ApiResponse,
   ApiTags,
@@ -52,27 +51,27 @@ export class CardsController {
   }
 
   @Post()
-  @ApiCreatedResponse({ description: 'Exemplo Created' })
+  @ApiCreatedResponse({ description: 'Exemplo Created', type: CardDto })
   @UsePipes(new ZodValidationPipe(CreateCardDto.schemaValidation()))
   async save(@Body() body: CreateCardDto): Promise<CardDto> {
     return await this.cardsService.save(body);
   }
 
   @Get(':id')
-  @ApiOkResponse({ description: 'Exemplo OK' })
+  @ApiOkResponse({ description: 'Exemplo OK', type: CardDto })
   async findById(@Param('id', ParseIntPipe) id: number): Promise<CardDto> {
     return this.cardsService.findById(id);
   }
 
   @Delete(':id')
-  @ApiNoContentResponse({ description: 'Exemplo No Content' })
+  @ApiOkResponse({ description: 'Exemplo OK', type: [CardDto] })
   async remove(@Param('id', ParseIntPipe) id: number): Promise<CardDto[]> {
     await this.cardsService.delete(id);
     return await this.cardsService.findAll();
   }
 
   @Put(':id')
-  @ApiOkResponse({ description: 'Exemplo Updated' })
+  @ApiOkResponse({ description: 'Exemplo Updated', type: CardDto })
   @ApiBadRequestResponse({ description: 'Exemplo Bad Request' })
   @UsePipes(new ZodValidationPipe(CardDto.schemaValidation()))
   async update(
@@ -83,8 +82,8 @@ export class CardsController {
       throw new BadRequestException(
         'IDs do parametro e do corpo da requisicao sao diferentes',
       );
-    } else {
-      return await this.cardsService.update(body);
     }
+
+    return await this.cardsService.update(body);
   }
 }
