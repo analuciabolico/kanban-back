@@ -1,0 +1,25 @@
+version: '3'
+
+services:
+  mysql:
+    image: mysql:8
+    restart: always
+    container_name: mysql-8-kanban
+    environment:
+      MYSQL_DATABASE: kanban
+      MYSQL_ROOT_PASSWORD: root
+    ports:
+      - '3306:3306'
+  adminer:
+    image: adminer
+    restart: always
+    ports:
+      - 8080:8080
+  # db-test:
+  #   image: mysql:8
+  #   restart: always
+  #   environment:
+  #     MYSQL_ROOT_PASSWORD: root
+  #     MYSQL_DATABASE: test
+  #   ports:
+  #     - '3307:3306'
